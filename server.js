@@ -5,6 +5,6 @@ require('dotenv').config();
 
 const port = process.env.PORT;
 
-app.use('/api', userRoute);
+app.use('/auth', userRoute);
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
