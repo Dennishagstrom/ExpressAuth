@@ -14,12 +14,13 @@ router.get("/users", (req, res, next) => {
     let params = []
     db.all(sql, params, (err, rows) => {
         if (err) {
-            res.status(400).json({"error":err.message});
+            res.status(400).json({
+                error:err.message});
             return;
         }
         res.json({
-            "message":"success",
-            "data":rows
+            message: "success",
+            data: rows
         })
     });
 });
@@ -31,7 +32,8 @@ router.get("/user/:id", (req, res, next) => {
     let params = [req.params.id]
     db.get(sql, params, (err, row) => {
         if (err) {
-            res.status(400).json({"error":err.message});
+            res.status(400).json({
+                error:err.message});
             return;
         }
         if (!row) {
@@ -39,9 +41,8 @@ router.get("/user/:id", (req, res, next) => {
             return;
         }
         res.json({
-            "status": "success",
-            "message":"success",
-            "data":row
+            message:"success",
+            data: row
         })
     });
 });
@@ -60,7 +61,8 @@ router.post("/register", (req, res, next) => {
         errors.push("No phone specified");
     }
     if (errors.length){
-        res.status(400).json({"error":errors.join(",")});
+        res.status(400).json({
+            error:errors.join(",")});
         return;
     }
     let data = {
@@ -77,9 +79,9 @@ router.post("/register", (req, res, next) => {
             return;
         }
         res.json({
-            "message": "success",
-            "data": data,
-            "id" : this.lastID
+            message: "success",
+            data: data,
+            id: this.lastID
         })
     });
 })
@@ -94,7 +96,7 @@ router.patch("/user/:id", (req, res, next) => {
         password : req.body.password ? md5(req.body.password) : null
     }
     db.run(
-        `UPDATE users set 
+        `UPDATE users set
            name = COALESCE(?,name), 
            email = COALESCE(?,email), 
            phone = COALESCE(?,phone),
@@ -103,7 +105,8 @@ router.patch("/user/:id", (req, res, next) => {
         [data.name, data.email, data.phone, data.password, req.params.id],
         function (err, result) {
             if (err){
-                res.status(400).json({"error": res.message})
+                res.status(400).json({
+                    error: res.message})
                 return;
             }
             res.json({
@@ -120,19 +123,23 @@ router.delete("/delete/:id", (req, res, next) => {
 
     db.get(`SELECT * FROM users WHERE id = ?`, [req.params.id], (err, row) => {
         if (err) {
-            res.status(400).json({"error":err.message});
+            res.status(400).json({
+                error: err.message});
             return;
         }
         if (!row) {
-            res.status(404).json({"error":"User not found"});
+            res.status(404).json({
+                error: "User not found"});
             return;
         }
         db.run(`DELETE FROM users WHERE id = ?`, req.params.id, function (err, result) {
             if (err){
-                res.status(400).json({"error": res.message})
+                res.status(400).json({
+                    error: res.message})
                 return;
             }
-            res.json({"message":`User ${row.name} deleted successfully`})
+            res.json({
+                message: `User ${row.name} deleted successfully`})
         });
     }
 )});
@@ -151,7 +158,8 @@ router.post("/authenticate", (req, res, next) => {
         errors.push("No email specified");
     }
     if (errors.length){
-        res.status(400).json({"error":errors.join(",")});
+        res.status(400).json({
+            error: errors.join(",")});
         return;
     }
 
@@ -159,7 +167,8 @@ router.post("/authenticate", (req, res, next) => {
     let isAuth = false;
     db.all(sql, function (err, rows) {
         if (err) {
-            res.status(400).json({"error":err.message});
+            res.status(400).json({
+                error: err.message});
             return;
         }
 
@@ -169,13 +178,14 @@ router.post("/authenticate", (req, res, next) => {
             }
             if (isAuth) {
                 res.json({
-                    "message": "success",
-                    "data": row
+                    message: "success",
+                    data: row
                 })
             }
         });
         if(!isAuth) {
-            res.status(400).json({"error":"Invalid username or password"});
+            res.status(400).json({
+                error: "Invalid username or password"});
         }
 
     });
