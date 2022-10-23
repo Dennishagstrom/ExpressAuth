@@ -117,17 +117,25 @@ router.patch("/user/:id", (req, res, next) => {
 // DELETE USER
 
 router.delete("/delete/:id", (req, res, next) => {
-    db.run(
-        'DELETE FROM users WHERE id = ?',
-        req.params.id,
-        function (err, result) {
+
+    db.get(`SELECT * FROM users WHERE id = ?`, [req.params.id], (err, row) => {
+        if (err) {
+            res.status(400).json({"error":err.message});
+            return;
+        }
+        if (!row) {
+            res.status(404).json({"error":"User not found"});
+            return;
+        }
+        db.run(`DELETE FROM users WHERE id = ?`, req.params.id, function (err, result) {
             if (err){
                 res.status(400).json({"error": res.message})
                 return;
             }
-            res.json({"message":"deleted", rows: this.changes})
+            res.json({"message":`User ${row.name} deleted successfully`})
         });
-});
+    }
+)});
 
 
 
