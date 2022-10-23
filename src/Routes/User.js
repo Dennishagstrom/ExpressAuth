@@ -37,7 +37,8 @@ router.get("/user/:id", (req, res, next) => {
             return;
         }
         if (!row) {
-            res.status(404).json({"error":"User not found"});
+            res.status(404).json({
+                error: "User not found"});
             return;
         }
         res.json({
@@ -75,7 +76,8 @@ router.post("/register", (req, res, next) => {
     let params =[data.name, data.email, data.phone, data.password]
     db.run(sql, params, function (err, result) {
         if (err){
-            res.status(400).json({"error": err.message})
+            res.status(400).json({
+                error: err.message})
             return;
         }
         res.json({
