@@ -24,11 +24,11 @@ router.get('/', (req, res) => {
 });
 
 
-// GET ALL TODOS THAT HAS STATUS = 3 (DONE)
+// GET ALL TODOS THAT HAS STATUS AND USER ID
 
-router.get("/done/:user_id", (req, res, next) => {
-    let sql = "SELECT * FROM todos WHERE status = 3 AND user_id = ?";
-    let params = [req.params.user_id];
+router.get("/:status/:user_id", (req, res, next) => {
+    let sql = "SELECT * FROM todos WHERE status = ? AND user_id = ?";
+    let params = [req.params.status, req.params.user_id];
     db.all(sql, params, (err, row) => {
         if (err) {
             res.status(400).json({
