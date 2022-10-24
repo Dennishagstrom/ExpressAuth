@@ -66,14 +66,17 @@ router.post("/register", (req, res, next) => {
             error:errors.join(",")});
         return;
     }
+
     let data = {
         name: req.body.name,
         email: req.body.email,
         phone: req.body.phone,
         password : md5(req.body.password)
     }
+
     let sql ='INSERT INTO users (name, email, phone, password) VALUES (?,?,?,?)'
-    let params =[data.name, data.email, data.phone, data.password]
+    let params = [data.name, data.email, data.phone, data.password]
+
     db.run(sql, params, function (err, result) {
         if (err){
             res.status(400).json({
@@ -167,7 +170,7 @@ router.post("/authenticate", (req, res, next) => {
 
     let sql = `SELECT * FROM users WHERE email = "${req.body.email}" AND password = "${md5(req.body.password)}"`
     let isAuth = false;
-    db.all(sql, function (err, rows) {
+    db.all(sql, (err, rows) => {
         if (err) {
             res.status(400).json({
                 error: err.message});
